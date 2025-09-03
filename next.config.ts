@@ -4,6 +4,18 @@ const nextConfig: NextConfig = {
    eslint: {
     ignoreDuringBuilds: true,
   },
+   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com", 
+      },
+      {
+        protocol: "https",
+        hostname: "jsonplaceholder.typicode.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
