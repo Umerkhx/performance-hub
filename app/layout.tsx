@@ -26,22 +26,22 @@ export const metadata: Metadata = {
   description:
     "Test, monitor, and optimize your applications with PerformanceHub – a powerful performance testing platform featuring real-time metrics, advanced analytics, and lightning-fast monitoring.",
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
     googleBot: {
-      index: false,
-      follow: false,
+      index: true,
+      follow: true,
     },
   },
   openGraph: {
     title: "PerformanceHub | Performance Testing Platform with Real-Time Metrics",
     description:
       "Test, monitor, and optimize your applications with PerformanceHub – real-time metrics, analytics & monitoring.",
-    url: "https://yourdomain.com",
+    url: "https://performance-hub-mme.vercel.app",
     siteName: "PerformanceHub",
     images: [
       {
-        url: "https://yourdomain.com/favicon.ico",
+        url: "https://performance-hub-mme.vercel.app/favicon.ico",
         width: 1200,
         height: 630,
         alt: "PerformanceHub Dashboard",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     title: "PerformanceHub | Performance Testing Platform",
     description:
       "Boost app speed with PerformanceHub – real-time metrics, analytics & monitoring.",
-    images: ["https://yourdomain.com/favicon.ico"],
+    images: ["https://performance-hub-mme.vercel.app/favicon.ico"],
   },
 };
 

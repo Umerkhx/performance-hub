@@ -16,13 +16,12 @@ export function ContactMap() {
   ]
 
   useEffect(() => {
-    // Simulate interactive map with animated elements
     const interval = setInterval(() => {
       setActiveOffice((prev) => (prev + 1) % offices.length)
     }, 3000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [offices.length])
 
   return (
     <section className="py-20 bg-gradient-to-br from-secondary/10 to-primary/5">
@@ -30,7 +29,7 @@ export function ContactMap() {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-heading font-bold mb-4">Find Us Worldwide</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            With offices across the globe, we're always close to our clients.
+            With offices across the globe, we&apos;re always close to our clients.
           </p>
         </div>
 
