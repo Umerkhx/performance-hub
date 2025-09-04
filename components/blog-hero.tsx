@@ -1,11 +1,7 @@
 "use client"
-
-import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, Eye, Heart, ArrowRight } from "lucide-react"
+import { Calendar, Clock, TrendingUp, User } from "lucide-react"
 
 interface BlogPost {
   id: number
@@ -30,112 +26,110 @@ interface BlogHeroProps {
 }
 
 export function BlogHero({ featuredPost }: BlogHeroProps) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted || !featuredPost) return null
-
   return (
-    <section className="relative pt-24 pb-16 bg-gradient-to-br from-background via-secondary to-background overflow-hidden">
+    <section className="pt-24 pb-12  relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 right-10 w-32 h-32 bg-primary/5 rounded-full animate-float"></div>
-        <div
-          className="absolute bottom-10 left-10 w-24 h-24 bg-accent/5 rounded-full animate-float"
-          style={{ animationDelay: "1s" }}
-        ></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-20 w-32 h-32 bg-white rounded-full animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 bg-white rounded-full animate-pulse animation-delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white rounded-full animate-pulse animation-delay-2000"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 animate-slide-in-up">
-          <h1 className="font-heading font-black text-4xl md:text-6xl text-balance mb-6">
-            <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient">
-              Performance Blog
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="text-center mb-12">
+          <div className="inline-block">
+            <span className="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm text-black rounded-full text-sm font-medium mb-4 transform transition-transform duration-300 hover:scale-105">
+              Featured Article
             </span>
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-6 leading-tight">
+            Performance<br />
+            <span className="text-blue-900">Insights & Guides</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            Latest insights, tutorials, and best practices for performance testing and optimization
+          <p className="text-xl text-blue-950 max-w-3xl mx-auto leading-relaxed">
+            Expert insights, practical tutorials, and cutting-edge strategies for optimizing web performance
           </p>
         </div>
 
-        {/* Featured Post */}
-        <div className="max-w-4xl mx-auto animate-slide-in-up stagger-1">
-          <div className="relative group cursor-pointer">
-            <div className="relative overflow-hidden rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <div className="relative overflow-hidden">
+        {featuredPost && (
+          <div className="max-w-4xl mx-auto">
+            <Link href={`/blog/${featuredPost.slug}`} className="group block">
+              <article className="bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-transform duration-300 group-hover:scale-[1.02]">
+                <div className="relative h-64 md:h-80 lg:h-96">
                   <Image
-                    src={featuredPost.image || "/placeholder.svg"}
+                    src={featuredPost.image}
                     alt={featuredPost.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-64 lg:h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
+                    priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                  <Badge className="absolute top-4 left-4 bg-primary/90 text-primary-foreground">Featured</Badge>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <span className="inline-block px-3 py-1 bg-blue-600 text-white rounded-full text-sm font-medium mb-3">
+                      {featuredPost.category}
+                    </span>
+                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
+                      {featuredPost.title}
+                    </h2>
+                  </div>
                 </div>
 
-                <div className="p-8 flex flex-col justify-center">
-                  <Badge variant="outline" className="w-fit mb-4">
-                    {featuredPost.category}
-                  </Badge>
-
-                  <h2 className="font-heading font-bold text-2xl lg:text-3xl text-balance mb-4 group-hover:text-primary transition-colors">
-                    {featuredPost.title}
-                  </h2>
-
-                  <p className="text-muted-foreground leading-relaxed mb-6">{featuredPost.excerpt}</p>
-
-                  <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(featuredPost.publishedAt).toLocaleDateString()}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {featuredPost.readTime}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      {featuredPost.views.toLocaleString()}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Heart className="h-4 w-4" />
-                      {featuredPost.likes}
-                    </div>
-                  </div>
+                <div className="p-6 md:p-8">
+                  <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+                    {featuredPost.excerpt}
+                  </p>
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center space-x-4">
                       <Image
-                        src={featuredPost.author.avatar || "/placeholder.svg"}
+                        src={featuredPost.author.avatar}
                         alt={featuredPost.author.name}
-                        width={40}
-                        height={40}
+                        width={48}
+                        height={48}
                         className="rounded-full"
                       />
                       <div>
-                        <div className="font-medium">{featuredPost.author.name}</div>
-                        <div className="text-sm text-muted-foreground">Author</div>
+                        <p className="font-medium text-gray-900">{featuredPost.author.name}</p>
+                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                          <span className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {new Date(featuredPost.publishedAt).toLocaleDateString()}
+                          </span>
+                          <span className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {featuredPost.readTime}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    <Link href={`/blog/${featuredPost.slug}`}>
-                      <Button className="animate-pulse-glow">
-                        Read Article
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                      <span className="flex items-center">
+                        <TrendingUp className="w-4 h-4 mr-1" />
+                        {featuredPost.views.toLocaleString()}
+                      </span>
+                      <span className="flex items-center">
+                        <User className="w-4 h-4 mr-1" />
+                        {featuredPost.likes}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </article>
+            </Link>
           </div>
-        </div>
+        )}
       </div>
+
+      <style jsx>{`
+        .animation-delay-1000 {
+          animation-delay: 1s;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </section>
   )
 }

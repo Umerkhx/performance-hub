@@ -3,6 +3,7 @@ import { Navigation } from "@/components/navigation"
 import { BlogHero } from "@/components/blog-hero"
 import { BlogGrid } from "@/components/blog-grid"
 import { BlogSidebar } from "@/components/blog-sidebar"
+import { PerformanceMetrics } from "@/components/performance-metrics"
 
 export const metadata = {
   title: "Performance Blog - PerformanceHub",
@@ -139,30 +140,73 @@ const blogPosts = [
 ]
 
 export default async function BlogPage() {
-  await new Promise((resolve) => setTimeout(resolve, 100))
+  await new Promise((resolve) => setTimeout(resolve, 150))
 
   const featuredPosts = blogPosts.filter((post) => post.featured)
   const recentPosts = blogPosts.slice(0, 4)
 
   return (
-    <main className="min-h-screen bg-background">
+   <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navigation />
+      <PerformanceMetrics/>
       <BlogHero featuredPost={featuredPosts[0]} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3">
-            <Suspense fallback={<div className="animate-pulse">Loading posts...</div>}>
+            <Suspense fallback={<BlogGridSkeleton />}>
               <BlogGrid posts={blogPosts} />
             </Suspense>
           </div>
           <div className="lg:col-span-1">
-            <Suspense fallback={<div className="animate-pulse">Loading sidebar...</div>}>
+            <Suspense fallback={<SidebarSkeleton />}>
               <BlogSidebar recentPosts={recentPosts} />
             </Suspense>
           </div>
         </div>
       </div>
     </main>
+  )
+}
+
+
+function BlogGridSkeleton() {
+  return (
+    <div className="space-y-8">
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="bg-white rounded-xl p-6 shadow-sm">
+          <div className="animate-pulse">
+            <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded mb-4 w-3/4"></div>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+              <div className="h-4 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function SidebarSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-xl p-6 shadow-sm">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-200 rounded mb-4"></div>
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-center space-x-3 mb-3">
+              <div className="w-16 h-12 bg-gray-200 rounded"></div>
+              <div className="flex-1">
+                <div className="h-4 bg-gray-200 rounded mb-1"></div>
+                <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }

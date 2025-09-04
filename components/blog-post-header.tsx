@@ -1,10 +1,6 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Calendar, Clock, Eye, Heart, Share2, Bookmark } from "lucide-react"
+import { Calendar, Clock, TrendingUp, User, Share2, Bookmark } from "lucide-react"
+import Link from "next/link"
 
 interface BlogPost {
   id: number
@@ -18,10 +14,10 @@ interface BlogPost {
   publishedAt: string
   readTime: string
   category: string
+  tags: string[]
   image: string
   views: number
   likes: number
-  tags: string[]
 }
 
 interface BlogPostHeaderProps {
@@ -29,93 +25,86 @@ interface BlogPostHeaderProps {
 }
 
 export function BlogPostHeader({ post }: BlogPostHeaderProps) {
-  const [mounted, setMounted] = useState(false)
-  const [isLiked, setIsLiked] = useState(false)
-  const [isBookmarked, setIsBookmarked] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
-
   return (
-    <section className="relative pt-24 pb-8 bg-gradient-to-br from-background via-secondary to-background">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="animate-slide-in-up">
-          <Badge variant="outline" className="mb-4">
+    <header className="pt-24 pb-12 bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-800 relative overflow-hidden">
+    
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Category badge */}
+        <div className="text-center mb-8">
+          <span className="inline-block px-4 py-2 bg-black/70 backdrop-blur-sm text-white rounded-full text-sm font-medium transform transition-transform duration-300 hover:scale-105">
             {post.category}
-          </Badge>
+          </span>
+        </div>
 
-          <h1 className="font-heading font-black text-3xl md:text-5xl text-balance mb-6">{post.title}</h1>
+        {/* Title and meta */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 mb-6 leading-tight">
+            {post.title}
+          </h1>
+          
+          <p className="text-xl text-zinc-900 mb-8 leading-relaxed max-w-3xl mx-auto">
+            {post.excerpt}
+          </p>
 
-          <p className="text-xl text-muted-foreground leading-relaxed mb-8">{post.excerpt}</p>
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-            <div className="flex items-center gap-4">
-              <Image
-                src={post.author.avatar || "/placeholder.svg"}
+          {/* Author and meta info */}
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+            <div className="flex items-center space-x-4">
+              <img
+                src={post.author.avatar}
                 alt={post.author.name}
-                width={48}
-                height={48}
-                className="rounded-full"
+                width={56}
+                height={56}
+                className="rounded-full ring-4 ring-white/20"
               />
-              <div>
-                <div className="font-medium">{post.author.name}</div>
-                <div className="text-sm text-muted-foreground">{post.author.bio}</div>
+              <div className="text-left">
+                <p className="font-semibold text-zinc-900">{post.author.name}</p>
+                <p className="text-zinc-800 text-sm">{post.author.bio}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsLiked(!isLiked)}
-                className={isLiked ? "text-red-500 border-red-500" : ""}
-              >
-                <Heart className={`h-4 w-4 mr-1 ${isLiked ? "fill-current" : ""}`} />
-                {post.likes + (isLiked ? 1 : 0)}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className={isBookmarked ? "text-primary border-primary" : ""}
-              >
-                <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current" : ""}`} />
-              </Button>
-              <Button variant="outline" size="sm">
-                <Share2 className="h-4 w-4" />
-              </Button>
+            <div className="flex items-center space-x-6 text-zinc-800 text-sm">
+              <span className="flex items-center">
+                <Calendar className="w-4 h-4 mr-1" />
+                {new Date(post.publishedAt).toLocaleDateString()}
+              </span>
+              <span className="flex items-center">
+                <Clock className="w-4 h-4 mr-1" />
+                {post.readTime}
+              </span>
+              <span className="flex items-center">
+                <TrendingUp className="w-4 h-4 mr-1" />
+                {post.views.toLocaleString()} views
+              </span>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8">
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {new Date(post.publishedAt).toLocaleDateString()}
-            </div>
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              {post.readTime}
-            </div>
-            <div className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              {post.views.toLocaleString()} views
-            </div>
-          </div>
-
-          <div className="relative overflow-hidden rounded-2xl">
-            <Image
-              src={post.image || "/placeholder.svg"}
-              alt={post.title}
-              width={800}
-              height={400}
-              className="w-full h-64 md:h-96 object-cover"
-            />
+          {/* Action buttons */}
+          <div className="flex items-center justify-center space-x-4 mt-8">
+            <button className="flex items-center space-x-2 px-4 py-2 bg-zinc-900/80 backdrop-blur-sm text-white rounded-lg transition-all duration-200 hover:bg-zinc-950 transform hover:scale-105">
+              <Share2 className="w-4 h-4" />
+              <span>Share</span>
+            </button>
+            <button className="flex items-center space-x-2 px-4 py-2 bg-zinc-900/80 backdrop-blur-sm text-white rounded-lg transition-all duration-200 hover:bg-zinc-950 transform hover:scale-105">
+              <Bookmark className="w-4 h-4" />
+              <span>Save</span>
+            </button>
           </div>
         </div>
+
+        {/* Tags */}
+        <div className="flex flex-wrap justify-center gap-2 mt-8">
+          {post.tags.map((tag) => (
+            <Link
+              key={tag}
+              href={`/blog/tag/${tag}`}
+              className="px-3 py-1 bg-zinc-900/80 backdrop-blur-sm text-white rounded-lg text-sm transition-all duration-200 hover:bg-zinc-950 transform hover:scale-105"
+            >
+              #{tag}
+            </Link>
+          ))}
+        </div>
       </div>
-    </section>
+    </header>
   )
 }

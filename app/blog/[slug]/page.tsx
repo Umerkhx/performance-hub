@@ -3,8 +3,8 @@ import { Navigation } from "@/components/navigation"
 import { BlogPostHeader } from "@/components/blog-post-header"
 import { BlogPostContent } from "@/components/blog-post-content"
 import { BlogPostSidebar } from "@/components/blog-post-sidebar"
+import { PerformanceMetrics } from "@/components/performance-metrics"
 
-// Mock blog data - same as in blog/page.tsx
 const blogPosts = [
   {
     id: 1,
@@ -109,29 +109,47 @@ Modern load testing requires a holistic approach that considers the entire appli
     `,
     author: {
       name: "Sarah Chen",
-      avatar: "/professional-woman-engineer-developer.jpg",
+      avatar: "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       bio: "Senior Performance Engineer with 8+ years of experience in web optimization",
     },
     publishedAt: "2024-01-15",
     readTime: "12 min read",
     category: "Load Testing",
     tags: ["performance", "testing", "scalability", "optimization"],
-    image: "/mobile-app-performance-testing-interface.jpg",
+    image: "https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop",
     featured: true,
     views: 15420,
     likes: 342,
   },
-  // Add other posts here...
+  {
+    id: 2,
+    title: "Real-Time Performance Monitoring: Tools and Techniques",
+    slug: "real-time-performance-monitoring",
+    excerpt:
+      "Explore the latest tools and methodologies for monitoring application performance in real-time.",
+    content: "Full article content here...",
+    author: {
+      name: "Marcus Rodriguez",
+      avatar: "https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+      bio: "DevOps Engineer specializing in monitoring and observability",
+    },
+    publishedAt: "2024-01-12",
+    readTime: "8 min read",
+    category: "Monitoring",
+    tags: ["monitoring", "apm", "observability", "metrics"],
+    image: "https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=800&h=400&fit=crop",
+    featured: false,
+    views: 8930,
+    likes: 187,
+  },
 ]
 
-// Generate static params for all blog posts
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
     slug: post.slug,
   }))
 }
 
-// Generate metadata for each post
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const post = blogPosts.find((post) => post.slug === params.slug)
 
@@ -148,14 +166,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: post.title,
       description: post.excerpt,
       images: [post.image],
+      type: "article",
     },
   }
 }
 
 // This runs on the server for each request (SSR)
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  // Simulate server-side data fetching
-  await new Promise((resolve) => setTimeout(resolve, 50))
+  // Simulate realistic server-side data fetching delay
+  await new Promise((resolve) => setTimeout(resolve, 100))
 
   const post = blogPosts.find((post) => post.slug === params.slug)
 
@@ -166,8 +185,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const relatedPosts = blogPosts.filter((p) => p.id !== post.id && p.category === post.category).slice(0, 3)
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navigation />
+      <PerformanceMetrics />
       <BlogPostHeader post={post} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

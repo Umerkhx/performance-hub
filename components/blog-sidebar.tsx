@@ -1,12 +1,6 @@
-"use client"
-
 import Image from "next/image"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, TrendingUp, Calendar } from "lucide-react"
+import { Calendar, Clock, TrendingUp, Tag, Users } from "lucide-react"
 
 interface BlogPost {
   id: number
@@ -27,136 +21,121 @@ interface BlogSidebarProps {
   recentPosts: BlogPost[]
 }
 
-const categories = [
-  { name: "Load Testing", count: 12, color: "bg-primary" },
-  { name: "Monitoring", count: 8, color: "bg-accent" },
-  { name: "Database", count: 6, color: "bg-primary" },
-  { name: "Mobile Testing", count: 5, color: "bg-accent" },
-  { name: "API Testing", count: 4, color: "bg-primary" },
-  { name: "CDN", count: 3, color: "bg-accent" },
-]
-
-const popularTags = [
-  "performance",
-  "testing",
-  "optimization",
-  "monitoring",
-  "scalability",
-  "database",
-  "api",
-  "mobile",
-  "cdn",
-  "security",
-  "analytics",
-  "devops",
-]
-
 export function BlogSidebar({ recentPosts }: BlogSidebarProps) {
-  return (
-    <div className="space-y-8">
-      {/* Search */}
-      <Card className="animate-slide-in-up">
-        <CardHeader>
-          <CardTitle className="font-heading font-bold">Search Articles</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search blog posts..." className="pl-10" />
-          </div>
-        </CardContent>
-      </Card>
+  const categories = [
+    { name: "Load Testing", count: 12 },
+    { name: "Monitoring", count: 8 },
+    { name: "Database", count: 15 },
+    { name: "Mobile Testing", count: 6 },
+    { name: "CDN", count: 4 },
+    { name: "API Testing", count: 9 },
+  ]
 
+  const popularTags = [
+    "performance", "testing", "optimization", "scalability", 
+    "monitoring", "database", "mobile", "api", "cdn", "metrics"
+  ]
+
+  return (
+    <aside className="space-y-8">
       {/* Recent Posts */}
-      <Card className="animate-slide-in-up stagger-1">
-        <CardHeader>
-          <CardTitle className="font-heading font-bold flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
-            Recent Posts
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <Clock className="w-5 h-5 mr-2 text-blue-600" />
+          Recent Posts
+        </h3>
+        <div className="space-y-4">
           {recentPosts.map((post) => (
-            <Link key={post.id} href={`/blog/${post.slug}`} className="block group">
-              <div className="flex gap-3 p-3 rounded-lg hover:bg-secondary/50 transition-colors">
-                <Image
-                  src={post.image || "/placeholder.svg"}
-                  alt={post.title}
-                  width={60}
-                  height={60}
-                  className="rounded-lg object-cover flex-shrink-0"
-                />
+            <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
+              <article className="flex space-x-4 p-3 rounded-lg transition-all duration-200 hover:bg-gray-50">
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    className="object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                    sizes="64px"
+                  />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-sm line-clamp-2 group-hover:text-primary transition-colors">
-                    {post.title}
+                  <h4 className="font-medium text-gray-900 text-sm leading-tight mb-1 group-hover:text-blue-600 transition-colors duration-200">
+                    {post.title.substring(0, 50)}...
                   </h4>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(post.publishedAt).toLocaleDateString()}
+                  <div className="flex items-center text-xs text-gray-500 space-x-2">
+                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                    <span>•</span>
+                    <span>{post.readTime}</span>
                   </div>
                 </div>
-              </div>
+              </article>
             </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Categories */}
-      <Card className="animate-slide-in-up stagger-2">
-        <CardHeader>
-          <CardTitle className="font-heading font-bold">Categories</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <Tag className="w-5 h-5 mr-2 text-blue-600" />
+          Categories
+        </h3>
+        <div className="space-y-3">
           {categories.map((category) => (
-            <div
+            <Link
               key={category.name}
-              className="flex items-center justify-between p-2 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
+              href={`/blog/category/${category.name.toLowerCase().replace(' ', '-')}`}
+              className="flex items-center justify-between p-2 rounded-lg transition-all duration-200 hover:bg-blue-50 group"
             >
-              <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${category.color}`} />
-                <span className="font-medium">{category.name}</span>
-              </div>
-              <Badge variant="secondary">{category.count}</Badge>
-            </div>
+              <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-200">
+                {category.name}
+              </span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium group-hover:bg-blue-100 group-hover:text-blue-700 transition-all duration-200">
+                {category.count}
+              </span>
+            </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Popular Tags */}
-      <Card className="animate-slide-in-up stagger-3">
-        <CardHeader>
-          <CardTitle className="font-heading font-bold">Popular Tags</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {popularTags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                #{tag}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+          Popular Tags
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {popularTags.map((tag) => (
+            <Link
+              key={tag}
+              href={`/blog/tag/${tag}`}
+              className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-blue-100 hover:text-blue-700 transform hover:scale-105"
+            >
+              #{tag}
+            </Link>
+          ))}
+        </div>
+      </div>
 
-      {/* Newsletter */}
-      <Card className="animate-slide-in-up stagger-4 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="font-heading font-bold">Stay Updated</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Get the latest performance testing insights delivered to your inbox.
-          </p>
-          <div className="space-y-2">
-            <Input placeholder="Your email address" />
-            <Button className="w-full animate-pulse-glow">Subscribe</Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      {/* Newsletter Signup */}
+      <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-6 text-white">
+        <h3 className="text-xl font-bold mb-3 flex items-center">
+          <Users className="w-5 h-5 mr-2" />
+          Stay Updated
+        </h3>
+        <p className="text-blue-100 mb-4 text-sm leading-relaxed">
+          Get the latest performance insights delivered to your inbox
+        </p>
+        <div className="space-y-3">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="w-full px-4 py-2 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-200"
+          />
+          <button className="w-full bg-white text-blue-600 font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:bg-blue-50 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50">
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </aside>
   )
 }
